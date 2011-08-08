@@ -2,7 +2,7 @@
 # $FOOsettingspage.cpp, $FOOsettingspage.h and $FOOsettingspage.ui
 
 set(SETTINGSPAGES aliases appearance backlog bufferview chatview connection coreconnection chatmonitor coreaccount
-                  highlight identities ignorelist inputwidget itemview networks topicwidget)
+                  highlight identities ignorelist inputwidget itemview networks topicwidget quickaccessors)
 
 # Specify additional files (e.g. for subdialogs) here!
 set(SP_SOURCES aliasesmodel.cpp identityeditwidget.cpp ignorelistmodel.cpp notificationssettingspage.cpp previewbufferview.cpp)
