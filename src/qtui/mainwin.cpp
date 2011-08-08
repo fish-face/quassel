@@ -86,6 +86,7 @@
 #include "qtuisettings.h"
 #include "qtuistyle.h"
 #include "receivefiledlg.h"
+#include "quickaccessorssettingspage.h"
 #include "settingsdlg.h"
 #include "settingspagedlg.h"
 #include "statusnotifieritem.h"
@@ -1369,8 +1370,10 @@ void MainWin::showShortcutsDlg()
     dlg.addCollection(coll, coll->property("Category").toString());
     dlg.exec();
 #else
-    SettingsPageDlg dlg(new ShortcutsSettingsPage(QtUi::actionCollections(), this), this);
-    dlg.exec();
+  SettingsDlg *dlg = new SettingsDlg();
+  dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
+  dlg->registerSettingsPage(new QuickAccessorsSettingsPage(dlg));
+  dlg->show();
 #endif
 }
 
