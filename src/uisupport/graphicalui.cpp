@@ -39,6 +39,7 @@
 GraphicalUi *GraphicalUi::_instance = 0;
 QWidget *GraphicalUi::_mainWidget = 0;
 QHash<QString, ActionCollection *> GraphicalUi::_actionCollections;
+ActionCollection *GraphicalUi::_quickAccessorActionCollection = new ActionCollection(0);
 ContextMenuActionProvider *GraphicalUi::_contextMenuActionProvider = 0;
 ToolBarActionProvider *GraphicalUi::_toolBarActionProvider = 0;
 UiStyle *GraphicalUi::_uiStyle = 0;
@@ -80,17 +81,35 @@ ActionCollection *GraphicalUi::actionCollection(const QString &category, const Q
     return coll;
 }
 
+ActionCollection *GraphicalUi::quickAccessorActionCollection() {
+    if(_mainWidget && !_quickAccessorActionCollection->associatedWidgets().contains(_mainWidget))
+        _quickAccessorActionCollection->addAssociatedWidget(_mainWidget);
+    return _quickAccessorActionCollection;
+    //  if(_quickAccessorActionCollections.contains(id))
+    //    return _quickAccessorActionCollections.value(id);
+    //  ActionCollection *coll = new ActionCollection(_mainWidget);
 
-QHash<QString, ActionCollection *> GraphicalUi::actionCollections()
-{
+    //  coll->setProperty("Category", networkName);
+
+    //  if(_mainWidget)
+    //    coll->addAssociatedWidget(_mainWidget);
+    //  _quickAccessorActionCollections.insert(id, coll);
+    //  return coll;
+}
+
+QHash<QString, ActionCollection *> GraphicalUi::actionCollections() {
     return _actionCollections;
 }
 
+//QHash<NetworkId, ActionCollection *> GraphicalUi::quickAccessorActionCollections() {
+//  return _quickAccessorActionCollections;
+//}
 
-void GraphicalUi::loadShortcuts()
-{
+void GraphicalUi::loadShortcuts() {
     foreach(ActionCollection *coll, actionCollections())
     coll->readSettings();
+
+  _quickAccessorActionCollection->readSettings();
 }
 
 
@@ -98,8 +117,12 @@ void GraphicalUi::saveShortcuts()
 {
     ShortcutSettings s;
     s.clear();
-    foreach(ActionCollection *coll, actionCollections())
+  foreach(ActionCollection *coll, actionCollections()) {
+    qDebug() << "normal collection: " << coll->property("Category");
     coll->writeSettings();
+  }
+
+  quickAccessorActionCollection()->writeSettings();
 }
 
 

@@ -49,6 +49,7 @@
 #include "actioncollection.h"
 #include "bufferhotlistfilter.h"
 #include "buffermodel.h"
+#include "buffersettings.h"
 #include "bufferview.h"
 #include "bufferviewoverlay.h"
 #include "bufferviewoverlayfilter.h"
@@ -1041,6 +1042,38 @@ void MainWin::connectedToCore()
     connect(Client::transferManager(), SIGNAL(transferAdded(const ClientTransfer*)), SLOT(showNewTransferDlg(const ClientTransfer*)));
 
     setConnectedState();
+
+  // Now we have a core connection we can setup quick accessors to the buffers
+
+  QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
+
+  QListIterator<BufferId> bufIter(allBufferIds);
+  BufferId id;
+  BufferInfo info;
+  ActionCollection *coll = QtUi::quickAccessorActionCollection();
+
+  coll->clear();
+//  coll->addAction("QuickAccessorTest", new Action("test", coll, this, SLOT(onJumpKey()), QKeySequence(Qt::AltModifier+Qt::Key_Dollar)));
+//  coll->addAction("JumpKey0", new Action(tr("Quick Access #0"), coll, this, SLOT(onJumpKey()),
+//                                         QKeySequence(jumpModifier + Qt::Key_0)))->setProperty("Index", 0);
+
+  while(bufIter.hasNext()) {
+    id = bufIter.next();
+    info = Client::networkModel()->bufferInfo(id);
+    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+      BufferSettings settings(id);
+      if(settings.shortcut()) {
+        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
+                        new Action(info.bufferName(), coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
+//      NetworkId networkId = Client::networkModel()->networkId(id);
+//      QString networkName = Client::networkModel()->networkName(id);
+//      ActionCollection *coll = QtUi::quickAccessorActionCollection(networkId, networkName);
+
+//      coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
+//                      new Action(info.bufferName(),coll, this, SLOT(onJumpKey())));
+      }
+    }
+  }
 }
 
 
@@ -1370,9 +1403,40 @@ void MainWin::showShortcutsDlg()
     dlg.addCollection(coll, coll->property("Category").toString());
     dlg.exec();
 #else
+//  QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
+//  QHash<NetworkId, ActionCollection *> colls = QtUi::quickAccessorActionCollections();
+//  QHash<QString, ActionCollection *> collsWithStrings;
+
+//  colls.clear();
+
+//  QListIterator<BufferId> bufIter(allBufferIds);
+//  BufferId id;
+//  BufferInfo info;
+
+//  while(bufIter.hasNext()) {
+//      id = bufIter.next();
+//      info = Client::networkModel()->bufferInfo(id);
+//      if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+//        NetworkId networkId = Client::networkModel()->networkId(id);
+//        QString networkName = Client::networkModel()->networkName(id);
+//        ActionCollection *coll = QtUi::quickAccessorActionCollection(networkId, networkName);
+
+//        if(!collsWithStrings.value(networkName)) {
+//          collsWithStrings[networkName] = coll;
+//        }
+
+//        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
+//                        new Action(info.bufferName(),coll, this, SLOT(onJumpKey())));
+//      }
+//  }
+
+//  foreach(ActionCollection *coll, QtUi::quickAccessorActionCollections()) {
+//    qDebug() << "QA collection 2:" << coll->property("Category");
+//  }
+
   SettingsDlg *dlg = new SettingsDlg();
   dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
-  dlg->registerSettingsPage(new QuickAccessorsSettingsPage(dlg));
+//  dlg->registerSettingsPage(new ShortcutsSettingsPage(collsWithStrings, dlg));
   dlg->show();
 #endif
 }
@@ -1615,16 +1679,16 @@ void MainWin::onJumpKey()
     QAction *action = qobject_cast<QAction *>(sender());
     if (!action || !Client::bufferModel())
         return;
-    int idx = action->property("Index").toInt();
+    BufferId buffer = qvariant_cast<BufferId>(action->property("BufferId"));
 
-    if (_jumpKeyMap.isEmpty())
-        _jumpKeyMap = CoreAccountSettings().jumpKeyMap();
+//  if(_jumpKeyMap.isEmpty())
+//    _jumpKeyMap = CoreAccountSettings().jumpKeyMap();
 
-    if (!_jumpKeyMap.contains(idx))
-        return;
+//  if(!_jumpKeyMap.contains(idx))
+//    return;
 
-    BufferId buffer = _jumpKeyMap.value(idx);
-    if (buffer.isValid())
+//  BufferId buffer = _jumpKeyMap.value(idx);
+    if(buffer.isValid())
         Client::bufferModel()->switchToBuffer(buffer);
 }
 

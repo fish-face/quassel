@@ -24,17 +24,10 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="BufferView" name="quickAccessorsView"/>
+    <widget class="QTreeView" name="quickAccessorsView"/>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>BufferView</class>
-   <extends>QTreeView</extends>
-   <header>bufferview.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

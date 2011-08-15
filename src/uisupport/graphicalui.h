@@ -22,6 +22,7 @@
 #define GRAPHICALUI_H_
 
 #include "abstractui.h"
+#include "types.h"
 
 class ActionCollection;
 class ContextMenuActionProvider;
@@ -47,7 +48,9 @@ public:
     *  @param category The category (default: "General")
     */
     static ActionCollection *actionCollection(const QString &category = "General", const QString &translatedCategory = QString());
+  static ActionCollection *quickAccessorActionCollection();
     static QHash<QString, ActionCollection *> actionCollections();
+//  static QHash<NetworkId, ActionCollection *> quickAccessorActionCollections();
 
     //! Load custom shortcuts from ShortcutSettings
     /** @note This method assumes that all configurable actions are defined when being called
@@ -111,6 +114,7 @@ private:
     static GraphicalUi *_instance;
     static QWidget *_mainWidget;
     static QHash<QString, ActionCollection *> _actionCollections;
+  static ActionCollection *_quickAccessorActionCollection;
     static ContextMenuActionProvider *_contextMenuActionProvider;
     static ToolBarActionProvider *_toolBarActionProvider;
     static UiStyle *_uiStyle;
