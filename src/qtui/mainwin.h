@@ -189,6 +189,7 @@ private:
     void setupTitleSetter();
     void setupToolBars();
     void setupHotList();
+    void setupQuickAccessors();
 
     void updateIcon();
     void enableMenus();
