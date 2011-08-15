@@ -54,6 +54,7 @@ public:
         BufferPart = 0x20,
         BufferSwitchTo = 0x30,
         BufferRemove = 0x40,
+    BufferSetShortcut = 0x50,
 
         // Hide actions
         HideMask = 0x0f00,
