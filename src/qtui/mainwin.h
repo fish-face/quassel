@@ -123,6 +123,7 @@ private slots:
     void showIgnoreList(QString newRule = QString());
     void showShortcutsDlg();
     void toggleFullscreen();
+    void updateQuickAccessor(BufferId);
 
     void handleCoreConnectionError(const QString &errorMsg);
     void userAuthenticationRequired(CoreAccount *, bool *valid, const QString &errorMessage);

@@ -153,6 +153,7 @@ protected slots:
 signals:
     void showChannelList(NetworkId);
     void showIgnoreList(QString);
+  void bufferShortcutsChanged(BufferId);
 
 protected:
     virtual void handleNetworkAction(ActionType, QAction *);
