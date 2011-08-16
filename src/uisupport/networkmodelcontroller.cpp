@@ -296,8 +296,11 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
                 Client::bufferModel()->switchToBuffer(bufferInfo.bufferId());
                 break;
         case BufferSetShortcut:
+        {
           BufferSettings(bufferInfo.bufferId()).setShortcut(Qt::AltModifier+Qt::Key_QuoteDbl);
+          emit bufferShortcutsChanged(bufferInfo.bufferId());
           break;
+        }
             default:
                 break;
             }

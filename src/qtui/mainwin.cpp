@@ -184,6 +184,7 @@ void MainWin::init()
         SLOT(messagesInserted(const QModelIndex &, int, int)));
     connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(showChannelList(NetworkId)), SLOT(showChannelList(NetworkId)));
     connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(showIgnoreList(QString)), SLOT(showIgnoreList(QString)));
+  connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(bufferShortcutsChanged(BufferId)), SLOT(updateQuickAccessor(BufferId)));
 
     connect(Client::coreConnection(), SIGNAL(startCoreSetup(QVariantList)), SLOT(showCoreConfigWizard(QVariantList)));
     connect(Client::coreConnection(), SIGNAL(connectionErrorPopup(QString)), SLOT(handleCoreConnectionError(QString)));
@@ -1048,23 +1049,24 @@ void MainWin::connectedToCore()
 void MainWin::setupQuickAccessors() {
   QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
   QListIterator<BufferId> bufIter(allBufferIds);
-  BufferId id;
-  BufferInfo info;
+
+  QtUi::quickAccessorActionCollection()->clear();
+
+  while(bufIter.hasNext()) {
+    updateQuickAccessor(bufIter.next());
+  }
+}
+
+void MainWin::updateQuickAccessor(BufferId id) {
   ActionCollection *coll = QtUi::quickAccessorActionCollection();
 
-  coll->clear();
-
-  // Loop through buffers. If a shortcut is found in its BufferSettings, add an Action to the special ActionCollection for these shortcuts.
-  while(bufIter.hasNext()) {
-    id = bufIter.next();
-    info = Client::networkModel()->bufferInfo(id);
+  BufferInfo info = Client::networkModel()->bufferInfo(id);
     if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
       BufferSettings settings(id);
       if(settings.shortcut()) {
+      QString actionText = QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName());
         coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
-                        new Action(QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName()),
-                                                        coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
-      }
+                      new Action(actionText, coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
     }
   }
 }
