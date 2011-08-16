@@ -1398,40 +1398,8 @@ void MainWin::showShortcutsDlg()
     dlg.addCollection(coll, coll->property("Category").toString());
     dlg.exec();
 #else
-//  QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
-//  QHash<NetworkId, ActionCollection *> colls = QtUi::quickAccessorActionCollections();
-//  QHash<QString, ActionCollection *> collsWithStrings;
-
-//  colls.clear();
-
-//  QListIterator<BufferId> bufIter(allBufferIds);
-//  BufferId id;
-//  BufferInfo info;
-
-//  while(bufIter.hasNext()) {
-//      id = bufIter.next();
-//      info = Client::networkModel()->bufferInfo(id);
-//      if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
-//        NetworkId networkId = Client::networkModel()->networkId(id);
-//        QString networkName = Client::networkModel()->networkName(id);
-//        ActionCollection *coll = QtUi::quickAccessorActionCollection(networkId, networkName);
-
-//        if(!collsWithStrings.value(networkName)) {
-//          collsWithStrings[networkName] = coll;
-//        }
-
-//        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
-//                        new Action(info.bufferName(),coll, this, SLOT(onJumpKey())));
-//      }
-//  }
-
-//  foreach(ActionCollection *coll, QtUi::quickAccessorActionCollections()) {
-//    qDebug() << "QA collection 2:" << coll->property("Category");
-//  }
-
   SettingsDlg *dlg = new SettingsDlg();
   dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
-//  dlg->registerSettingsPage(new ShortcutsSettingsPage(collsWithStrings, dlg));
   dlg->show();
 #endif
 }
