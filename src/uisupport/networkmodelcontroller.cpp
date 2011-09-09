@@ -18,7 +18,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QApplication>
 #include <QComboBox>
+#include <QCursor>
+#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QGridLayout>
 #include <QIcon>
@@ -27,6 +30,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QHBoxLayout>
 
 #include "networkmodelcontroller.h"
 
@@ -37,6 +41,8 @@
 #include "util.h"
 #include "clientignorelistmanager.h"
 #include "client.h"
+#include "keysequencewidget.h"
+#include "graphicalui.h"
 
 NetworkModelController::NetworkModelController(QObject *parent)
     : QObject(parent),
@@ -297,8 +303,8 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
                 break;
         case BufferSetShortcut:
         {
-          BufferSettings(bufferInfo.bufferId()).setShortcut(Qt::AltModifier+Qt::Key_QuoteDbl);
-          emit bufferShortcutsChanged(bufferInfo.bufferId());
+          BufferShortcutPopup *dlg = new BufferShortcutPopup(bufferInfo);
+          connect(dlg, SIGNAL(keySequenceChanged(QKeySequence, BufferInfo)), this, SLOT(onBufferShortcutDlgSeqChanged(QKeySequence, BufferInfo)));
           break;
         }
             default:
@@ -308,9 +314,11 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
     }
 }
 
+void NetworkModelController::onBufferShortcutDlgSeqChanged(QKeySequence seq, BufferInfo info) {
+    emit bufferShortcutsChanged(info.bufferId());
+}
 
-void NetworkModelController::handleHideAction(ActionType type, QAction *action)
-{
+void NetworkModelController::handleHideAction(ActionType type, QAction *action) {
     Q_UNUSED(action)
 
     int filter = 0;
@@ -594,4 +602,51 @@ QString NetworkModelController::JoinDlg::channelPassword() const
 void NetworkModelController::JoinDlg::on_channel_textChanged(const QString &text)
 {
     buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!text.isEmpty());
+}
+
+/*** BUFFER SHORTCUT DIALOG ***/
+
+NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo bufferInfo, QWidget *parent)
+  : QWidget(parent, Qt::Popup), _bufferInfo(bufferInfo)
+{
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  QLabel *label = new QLabel(tr("Enter new Quick Accessor:"));
+
+  QHash<QString, ActionCollection *> actionCollections;
+  actionCollections.insert("Quick Accessors", GraphicalUi::quickAccessorActionCollection());
+  actionCollections.unite(GraphicalUi::actionCollections());
+  ShortcutsModel *shortcutsModel = new ShortcutsModel(actionCollections);
+
+  _keySeq = new KeySequenceWidget(this);
+  _keySeq->setModel(shortcutsModel);
+  _keySeq->setKeySequence(BufferSettings(bufferInfo.bufferId()).shortcut());
+
+  layout->addWidget(label);
+  layout->addWidget(_keySeq);
+  setLayout(layout);
+
+  connect(_keySeq, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onSequenceWidgetChanged(QKeySequence)));
+
+  //Move the popup to the mouse coordinates (ensure it's within the screen)
+  QRect geometry = QApplication::desktop()->availableGeometry(this);
+  geometry.adjust(0, 0, -sizeHint().width(), -sizeHint().height());
+  QPoint pos = QCursor::pos();
+  pos.rx() -= sizeHint().width()/2;
+  pos.ry() -= sizeHint().height()/2;
+
+  pos.setX(geometry.right() < pos.x() ? geometry.right() : pos.x());
+  pos.setY(geometry.bottom() < pos.y() ? geometry.bottom() : pos.y());
+  pos.setX(geometry.left() > pos.x() ? geometry.left() : pos.x());
+  pos.setY(geometry.top() > pos.y() ? geometry.top() : pos.y());
+
+  move(pos);
+  show();
+}
+
+void NetworkModelController::BufferShortcutPopup::onSequenceWidgetChanged(QKeySequence sequence) {
+  BufferSettings(_bufferInfo.bufferId()).setShortcut(sequence);
+  emit keySequenceChanged(sequence, _bufferInfo);
+  hide();
+  this->deleteLater();
+//  emit bufferShortcutsChanged(_bufferInfo.bufferId());
 }
