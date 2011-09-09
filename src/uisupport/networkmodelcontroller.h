@@ -150,7 +150,6 @@ protected:
 
 protected slots:
     virtual void actionTriggered(QAction *);
-  void onBufferShortcutDlgSeqChanged(QKeySequence, BufferInfo);
 
 signals:
     void showChannelList(NetworkId);
@@ -214,7 +213,7 @@ private slots:
     void onSequenceWidgetChanged(QKeySequence);
 
 signals:
-    void keySequenceChanged(QKeySequence, BufferInfo);
+    void keySequenceChanged(BufferId);
 
 private:
     KeySequenceWidget *_keySeq;

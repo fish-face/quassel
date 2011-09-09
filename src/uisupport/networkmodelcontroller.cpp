@@ -304,7 +304,7 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
         case BufferSetShortcut:
         {
           BufferShortcutPopup *dlg = new BufferShortcutPopup(bufferInfo);
-          connect(dlg, SIGNAL(keySequenceChanged(QKeySequence, BufferInfo)), this, SLOT(onBufferShortcutDlgSeqChanged(QKeySequence, BufferInfo)));
+          connect(dlg, SIGNAL(keySequenceChanged(BufferId)), this, SIGNAL(bufferShortcutsChanged(BufferId)));
           break;
         }
             default:
@@ -312,10 +312,6 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
             }
         }
     }
-}
-
-void NetworkModelController::onBufferShortcutDlgSeqChanged(QKeySequence seq, BufferInfo info) {
-    emit bufferShortcutsChanged(info.bufferId());
 }
 
 void NetworkModelController::handleHideAction(ActionType type, QAction *action) {
@@ -645,8 +641,8 @@ NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo buff
 
 void NetworkModelController::BufferShortcutPopup::onSequenceWidgetChanged(QKeySequence sequence) {
   BufferSettings(_bufferInfo.bufferId()).setShortcut(sequence);
-  emit keySequenceChanged(sequence, _bufferInfo);
+  emit keySequenceChanged(_bufferInfo.bufferId());
+
   hide();
-  this->deleteLater();
-//  emit bufferShortcutsChanged(_bufferInfo.bufferId());
+  deleteLater();
 }
