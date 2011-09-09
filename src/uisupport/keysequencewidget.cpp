@@ -370,6 +370,9 @@ bool KeySequenceWidget::isKeySequenceAvailable(const QKeySequence &seq)
     if (seq.isEmpty())
         return true;
 
+  if(!_shortcutsModel)
+    return true;
+
     // We need to access the root model, not the filtered one
     for (int cat = 0; cat < _shortcutsModel->rowCount(); cat++) {
         QModelIndex catIdx = _shortcutsModel->index(cat, 0);

@@ -12,6 +12,6 @@ set(SP_FORMS buffervieweditdlg.ui coreaccounteditdlg.ui createidentitydlg.ui ide
 
 if(NOT HAVE_KDE)
   set(SETTINGSPAGES ${SETTINGSPAGES} shortcuts)
-  set(SP_SOURCES ${SP_SOURCES} keysequencewidget.cpp shortcutsmodel.cpp)
-  set(SP_HEADERS ${SP_HEADERS} keysequencewidget.h shortcutsmodel.h)
+#  set(SP_SOURCES ${SP_SOURCES} shortcutsmodel.cpp)
+#  set(SP_HEADERS ${SP_HEADERS} shortcutsmodel.h)
 endif(NOT HAVE_KDE)
