@@ -21,7 +21,7 @@ class QuickAccessorsSettingsPage : public SettingsPage
     Q_OBJECT
 
 public:
-    explicit QuickAccessorsSettingsPage(QWidget *parent = 0);
+    explicit QuickAccessorsSettingsPage(const QHash<QString, ActionCollection*> &colls, QWidget *parent);
     ~QuickAccessorsSettingsPage();
 
 public slots:

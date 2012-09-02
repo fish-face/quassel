@@ -609,7 +609,7 @@ NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo buff
   QLabel *label = new QLabel(tr("Enter new Quick Accessor:"));
 
   QHash<QString, ActionCollection *> actionCollections;
-  actionCollections.insert("Quick Accessors", GraphicalUi::quickAccessorActionCollection());
+  actionCollections.unite(GraphicalUi::quickAccessorActionCollections());
   actionCollections.unite(GraphicalUi::actionCollections());
   ShortcutsModel *shortcutsModel = new ShortcutsModel(actionCollections);
 

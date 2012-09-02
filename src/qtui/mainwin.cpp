@@ -1028,25 +1028,45 @@ void MainWin::setupQuickAccessors() {
   QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
   QListIterator<BufferId> bufIter(allBufferIds);
 
-  QtUi::quickAccessorActionCollection()->clear();
+  QHash<QString, ActionCollection*> colls = QtUi::quickAccessorActionCollections();
+  qDeleteAll(colls);
+  colls.clear();
+  //QtUi::quickAccessorActionCollection()->clear();
+
 
   while(bufIter.hasNext()) {
     updateQuickAccessor(bufIter.next());
   }
+  qDebug() << "QuickAccessors: " << QtUi::quickAccessorActionCollections().size();
 }
 
 void MainWin::updateQuickAccessor(BufferId id) {
-  ActionCollection *coll = QtUi::quickAccessorActionCollection();
+  //ActionCollection *coll = QtUi::quickAccessorActionCollection();
 
   BufferInfo info = Client::networkModel()->bufferInfo(id);
-    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+  if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+      QString networkName = Client::networkModel()->networkName(id);
+      //if(QtUi::quickAccessorActionCollection(networkName)->action(QString("QuickAccessor%1").arg(id.toInt())) == 0)
+      //{
+      //QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
+                                                                                           //QtUi::quickAccessorActionCollection(networkName), parent(), SLOT(onJumpKey())));
       BufferSettings settings(id);
       if(settings.shortcut()) {
-      QString actionText = QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName());
-        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
-                      new Action(actionText, coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
-    }
+          qDebug() << settings.shortcut().toString() << " " << info.bufferName();
+          QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()),
+                                        new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
+      }
+      //}
   }
+//  BufferInfo info = Client::networkModel()->bufferInfo(id);
+//    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+//      BufferSettings settings(id);
+//      if(settings.shortcut()) {
+//      QString actionText = QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName());
+//        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
+//                      new Action(actionText, coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
+//    }
+//  }
 }
 
 
@@ -1378,6 +1398,7 @@ void MainWin::showShortcutsDlg()
 #else
   SettingsDlg *dlg = new SettingsDlg();
   dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
+  dlg->registerSettingsPage(new QuickAccessorsSettingsPage(QtUi::quickAccessorActionCollections(), dlg));
   dlg->show();
 #endif
 }
@@ -1595,6 +1616,8 @@ void MainWin::onJumpKey()
     if (!action || !Client::bufferModel())
         return;
     BufferId buffer = qvariant_cast<BufferId>(action->property("BufferId"));
+    BufferInfo info = Client::networkModel()->bufferInfo(buffer);
+    qDebug() << "Jump to " << buffer.toInt() << " name: " << info.bufferName() << " valid: " << buffer.isValid();
 
 //  if(_jumpKeyMap.isEmpty())
 //    _jumpKeyMap = CoreAccountSettings().jumpKeyMap();
