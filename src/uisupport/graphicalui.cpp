@@ -39,7 +39,7 @@
 GraphicalUi *GraphicalUi::_instance = 0;
 QWidget *GraphicalUi::_mainWidget = 0;
 QHash<QString, ActionCollection *> GraphicalUi::_actionCollections;
-ActionCollection *GraphicalUi::_quickAccessorActionCollection = 0;
+QHash<QString, ActionCollection *> GraphicalUi::_quickAccessorActionCollections;
 ContextMenuActionProvider *GraphicalUi::_contextMenuActionProvider = 0;
 ToolBarActionProvider *GraphicalUi::_toolBarActionProvider = 0;
 UiStyle *GraphicalUi::_uiStyle = 0;
@@ -81,23 +81,22 @@ ActionCollection *GraphicalUi::actionCollection(const QString &category, const Q
     return coll;
 }
 
-ActionCollection *GraphicalUi::quickAccessorActionCollection() {
-    if(_quickAccessorActionCollection)
-        return _quickAccessorActionCollection;
-    //  if(_quickAccessorActionCollections.contains(id))
-    //    return _quickAccessorActionCollections.value(id);
-    //  ActionCollection *coll = new ActionCollection(_mainWidget);
+ActionCollection *GraphicalUi::quickAccessorActionCollection(const QString &networkName)
+{
+    if (_quickAccessorActionCollections.contains(networkName))
+        return _quickAccessorActionCollections.value(networkName);
+    ActionCollection *coll = new ActionCollection(_mainWidget);
 
-    //  coll->setProperty("Category", networkName);
+    coll->setProperty("Category", networkName);
 
-    //  if(_mainWidget)
-    //    coll->addAssociatedWidget(_mainWidget);
-    //  _quickAccessorActionCollections.insert(id, coll);
-    //  return coll;
+    if (_mainWidget)
+        coll->addAssociatedWidget(_mainWidget);
+    _quickAccessorActionCollections.insert(networkName, coll);
+    return coll;
+}
 
-    _quickAccessorActionCollection = new ActionCollection(_mainWidget);
-    _quickAccessorActionCollection->addAssociatedWidget(_mainWidget);
-    return _quickAccessorActionCollection;
+QHash<QString, ActionCollection *> GraphicalUi::quickAccessorActionCollections() {
+    return _quickAccessorActionCollections;
 }
 
 QHash<QString, ActionCollection *> GraphicalUi::actionCollections() {

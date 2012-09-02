@@ -7,13 +7,13 @@
 #include "buffermodel.h"
 #include "bufferview.h"
 
-QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(QWidget *parent)
+QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(const QHash<QString, ActionCollection*> &colls, QWidget *parent)
     : SettingsPage(tr("Interface"), tr("Quick Accessors"), parent),
-    _actionCollection(new ActionCollection(this))
+      _shortcutsModel(new ShortcutsModel(colls, this))
 {
     ui.setupUi(this);
 
-    _shortcutsModel = new ShortcutsModel(QHash<QString, ActionCollection*>(), this);
+    _shortcutsModel = new ShortcutsModel(colls, this);
     ui.quickAccessorsView->setModel(_shortcutsModel);
 //    _config = new BufferViewConfig(-667, this);
 //    _config->setBufferViewName("tmpChatMonitorAvailableBuffers");
@@ -26,7 +26,7 @@ QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(QWidget *parent)
 QuickAccessorsSettingsPage::~QuickAccessorsSettingsPage()
 {
     delete _shortcutsModel;
-    delete _actionCollection;
+    //delete _actionCollection;
 }
 
 void QuickAccessorsSettingsPage::load() {
@@ -34,7 +34,7 @@ void QuickAccessorsSettingsPage::load() {
   QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
 //  QList<NetworkId> networkIds = Client::networkIds();
 //  QHash<NetworkId, ActionCollection *> networkToColl;
-  QHash<QString, ActionCollection *> colls;
+  QHash<QString, ActionCollection *> colls = QtUi::quickAccessorActionCollections();
 
 //  QListIterator<NetworkId> netIter(networkIds);
 //  NetworkId networkId;
@@ -52,20 +52,23 @@ void QuickAccessorsSettingsPage::load() {
   BufferId id;
   BufferInfo info;
 
-  while(bufIter.hasNext()) {
-      id = bufIter.next();
-      info = Client::networkModel()->bufferInfo(id);
-      if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
-        QString networkName = Client::networkModel()->networkName(id);
-        if(!colls.value(networkName)) {
-          colls[networkName] = new ActionCollection(this);
-          colls[networkName]->setProperty("Category", networkName);
-        }
-
-        colls[networkName]->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
-                                                                                             _actionCollection, parent(), SLOT(onJumpKey())));
-      }
-  }
+//    //We got some quickaccessors when created, but there might be buffers not in that collection we need to show so we add them now.
+//    while(bufIter.hasNext()) {
+//        id = bufIter.next();
+//        info = Client::networkModel()->bufferInfo(id);
+//        if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+//            QString networkName = Client::networkModel()->networkName(id);
+//            if(!colls.value(networkName)) {
+//                colls[networkName] = new ActionCollection(this);
+//                colls[networkName]->setProperty("Category", networkName);
+//            }
+//            if(colls[networkName]->action(QString("QuickAccessor%1").arg(id.toInt())) == 0)
+//            {
+//                colls[networkName]->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
+//                                                                                                     _actionCollection, parent(), SLOT(onJumpKey())));
+//            }
+//        }
+//    }
 
   _shortcutsModel = new ShortcutsModel(colls, this);
   ui.quickAccessorsView->setModel(_shortcutsModel);
@@ -74,7 +77,8 @@ void QuickAccessorsSettingsPage::load() {
 }
 
 void QuickAccessorsSettingsPage::save() {
-
+    _shortcutsModel->commit();
+    SettingsPage::save();
 }
 
 void QuickAccessorsSettingsPage::defaults() {
