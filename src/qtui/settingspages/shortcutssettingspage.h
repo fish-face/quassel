@@ -51,8 +51,7 @@ class ShortcutsSettingsPage : public SettingsPage
 {
     Q_OBJECT
 public:
-    ShortcutsSettingsPage(const QHash<QString, ActionCollection *> &actionCollections, QWidget *parent = 0);
-
+    ShortcutsSettingsPage(const QHash<QString, ActionCollection *> &actionCollections, QWidget *parent, const QString &category=tr("Interface"), const QString &name=tr("Shortcuts"));
     inline bool hasDefaults() const { return true; }
 
 public slots:
@@ -66,7 +65,9 @@ private slots:
     void setWidgetStates();
     void toggledCustomOrDefault();
 
-private:
+protected:
+    void initui();
+
     Ui::ShortcutsSettingsPage ui;
     ShortcutsModel *_shortcutsModel;
     ShortcutsFilter *_shortcutsFilter;

@@ -61,8 +61,8 @@ bool ShortcutsFilter::filterAcceptsRow(int source_row, const QModelIndex &source
 
 /****************************************************************************/
 
-ShortcutsSettingsPage::ShortcutsSettingsPage(const QHash<QString, ActionCollection *> &actionCollections, QWidget *parent)
-    : SettingsPage(tr("Interface"), tr("Shortcuts"), parent),
+ShortcutsSettingsPage::ShortcutsSettingsPage(const QHash<QString, ActionCollection *> &actionCollections, QWidget *parent, const QString &category, const QString &name)
+    : SettingsPage(category, name, parent),
     _shortcutsModel(new ShortcutsModel(actionCollections, this)),
     _shortcutsFilter(new ShortcutsFilter(this))
 {
@@ -90,6 +90,10 @@ ShortcutsSettingsPage::ShortcutsSettingsPage(const QHash<QString, ActionCollecti
     QTimer::singleShot(0, ui.searchEdit, SLOT(setFocus()));
 }
 
+/*void ShortcutsSettingsPage::initUi()
+{
+
+}*/
 
 void ShortcutsSettingsPage::setWidgetStates()
 {

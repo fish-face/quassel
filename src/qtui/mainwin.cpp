@@ -1073,11 +1073,13 @@ void MainWin::updateQuickAccessor(BufferId id) {
       //QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
                                                                                            //QtUi::quickAccessorActionCollection(networkName), parent(), SLOT(onJumpKey())));
       BufferSettings settings(id);
-      if(settings.shortcut()) {
-          qDebug() << settings.shortcut().toString() << " " << info.bufferName();
-          QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()),
-                                        new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
-      }
+      //if(settings.shortcut()) {
+      qDebug() << settings.shortcut().toString() << " " << info.bufferName();
+      Action *a = new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()));
+      a->setShortcut(settings.shortcut(), Action::ActiveShortcut);
+      a->setProperty("BufferId", qVariantFromValue(id));
+      QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), a);
+      //}
       //}
   }
 //  BufferInfo info = Client::networkModel()->bufferInfo(id);

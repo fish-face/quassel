@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "settingspage.h"
-#include "ui_quickaccessorssettingspage.h"
+#include "shortcutssettingspage.h"
 
 #include "action.h"
 #include "actioncollection.h"
@@ -12,17 +12,21 @@
 #include "bufferviewconfig.h"
 #include "shortcutsmodel.h"
 
-/*namespace Ui {
-    class QuickAccessorsSettingsPage;
-}*/
+class QuickAccessorsModel : public ShortcutsModel {
+    Q_OBJECT
 
-class QuickAccessorsSettingsPage : public SettingsPage
+public:
+    QuickAccessorsModel(const QHash<QString, ActionCollection*> &colls, QWidget *parent = 0);
+    void commit();
+};
+
+class QuickAccessorsSettingsPage : public ShortcutsSettingsPage
 {
     Q_OBJECT
 
 public:
-    explicit QuickAccessorsSettingsPage(const QHash<QString, ActionCollection*> &colls, QWidget *parent);
-    ~QuickAccessorsSettingsPage();
+    QuickAccessorsSettingsPage(const QHash<QString, ActionCollection*> &colls, QWidget *parent);
+    //~QuickAccessorsSettingsPage();
 
 public slots:
     void save();
@@ -30,11 +34,11 @@ public slots:
     void defaults();
 
 private:
-    Ui::QuickAccessorsSettingsPage ui;
-    BufferViewConfig *_config;
-    QHash<int, BufferId> _jumpKeyMap;
-    ShortcutsModel *_shortcutsModel;
-    ActionCollection *_actionCollection;
+    //Ui::QuickAccessorsSettingsPage ui;
+    //BufferViewConfig *_config;
+    //QHash<int, BufferId> _jumpKeyMap;
+    //ShortcutsModel *_shortcutsModel;
+    //ActionCollection *_actionCollection;
 };
 
 #endif // QUICKACCESSORSSETTINGSPAGE_H
