@@ -36,7 +36,6 @@ public slots:
 private:
     //Ui::QuickAccessorsSettingsPage ui;
     //BufferViewConfig *_config;
-    //QHash<int, BufferId> _jumpKeyMap;
     //ShortcutsModel *_shortcutsModel;
     //ActionCollection *_actionCollection;
 };

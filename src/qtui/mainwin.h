@@ -145,7 +145,6 @@ private slots:
     void on_actionDebugHotList_triggered();
     void on_actionDebugLog_triggered();
 
-    void bindJumpKey();
     void onJumpKey();
 
     void clientNetworkCreated(NetworkId);
@@ -217,7 +216,6 @@ private:
     QPoint _normalPos; //!< Position of the non-maximized window
 
     BufferHotListFilter *_bufferHotList;
-    QHash<int, BufferId> _jumpKeyMap;
     int _activeBufferViewIndex;
 
     friend class QtUi;
