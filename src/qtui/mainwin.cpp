@@ -986,7 +986,6 @@ void MainWin::setupQuickAccessors() {
   while(bufIter.hasNext()) {
     updateQuickAccessor(bufIter.next());
   }
-  qDebug() << "QuickAccessors: " << QtUi::quickAccessorActionCollections().size();
 }
 
 void MainWin::updateQuickAccessor(BufferId id) {
@@ -1001,7 +1000,6 @@ void MainWin::updateQuickAccessor(BufferId id) {
                                                                                            //QtUi::quickAccessorActionCollection(networkName), parent(), SLOT(onJumpKey())));
       BufferSettings settings(id);
       //if(settings.shortcut()) {
-      qDebug() << settings.shortcut().toString() << " " << info.bufferName();
       Action *a = new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()));
       a->setShortcut(settings.shortcut(), Action::ActiveShortcut);
       a->setProperty("BufferId", qVariantFromValue(id));
