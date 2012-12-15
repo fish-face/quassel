@@ -60,17 +60,17 @@ public slots:
      *  ActionCollections to be static during the lifetime of the settingspage. This will merely
      *  re-read the shortcuts currently set in Quassel.
      */
-    void load();
+    virtual void load();
 
     //! Load default shortcuts from the ActionCollections
     /** Note that this will not rebuild the internal structure of the model, as we assume the
      *  ActionCollections to be static during the lifetime of the settingspage. This will update
      *  the model's state from the ActionCollections' defaults.
      */
-    void defaults();
+    virtual void defaults();
 
     //! Commit the model changes to the ActionCollections
-    void commit();
+    virtual void commit();
 
     inline bool hasChanged() const { return _changedCount; }
 
@@ -79,6 +79,7 @@ signals:
     void hasChanged(bool changed);
 
 private:
+protected:
     struct Item {
         inline Item() { parentItem = 0; collection = 0; action = 0; }
         inline ~Item() { qDeleteAll(actionItems); }

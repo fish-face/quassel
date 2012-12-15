@@ -24,10 +24,43 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTreeView" name="quickAccessorsView"/>
+    <widget class="QTreeView" name="shortcutsView"/>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="actionBox">
+     <property name="title">
+      <string>Shortcut for Selected Buffer</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>346</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="KeySequenceWidget" name="keySequenceWidget" native="true"/>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KeySequenceWidget</class>
+   <extends>QWidget</extends>
+   <header>keysequencewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
