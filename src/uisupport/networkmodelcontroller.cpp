@@ -301,12 +301,12 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
             case BufferSwitchTo:
                 Client::bufferModel()->switchToBuffer(bufferInfo.bufferId());
                 break;
-        case BufferSetShortcut:
-        {
-          BufferShortcutPopup *dlg = new BufferShortcutPopup(bufferInfo);
-          connect(dlg, SIGNAL(keySequenceChanged(BufferId)), this, SIGNAL(bufferShortcutsChanged(BufferId)));
-          break;
-        }
+            case BufferSetShortcut:
+            {
+                BufferShortcutPopup *dlg = new BufferShortcutPopup(bufferInfo);
+                connect(dlg, SIGNAL(keySequenceChanged(BufferId)), this, SIGNAL(bufferShortcutsChanged(BufferId)));
+                break;
+            }
             default:
                 break;
             }
@@ -603,46 +603,46 @@ void NetworkModelController::JoinDlg::on_channel_textChanged(const QString &text
 /*** BUFFER SHORTCUT DIALOG ***/
 
 NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo bufferInfo, QWidget *parent)
-  : QWidget(parent, Qt::Popup), _bufferInfo(bufferInfo)
+    : QWidget(parent, Qt::Popup), _bufferInfo(bufferInfo)
 {
-  QHBoxLayout *layout = new QHBoxLayout(this);
-  QLabel *label = new QLabel(tr("Enter new Quick Accessor:"));
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    QLabel *label = new QLabel(tr("Enter new Quick Accessor:"));
 
-  QHash<QString, ActionCollection *> actionCollections;
-  actionCollections.unite(GraphicalUi::quickAccessorActionCollections());
-  actionCollections.unite(GraphicalUi::actionCollections());
-  ShortcutsModel *shortcutsModel = new ShortcutsModel(actionCollections);
+    QHash<QString, ActionCollection *> actionCollections;
+    actionCollections.unite(GraphicalUi::quickAccessorActionCollections());
+    actionCollections.unite(GraphicalUi::actionCollections());
+    ShortcutsModel *shortcutsModel = new ShortcutsModel(actionCollections);
 
-  _keySeq = new KeySequenceWidget(this);
-  _keySeq->setModel(shortcutsModel);
-  _keySeq->setKeySequence(BufferSettings(bufferInfo.bufferId()).shortcut());
+    _keySeq = new KeySequenceWidget(this);
+    _keySeq->setModel(shortcutsModel);
+    _keySeq->setKeySequence(BufferSettings(bufferInfo.bufferId()).shortcut());
 
-  layout->addWidget(label);
-  layout->addWidget(_keySeq);
-  setLayout(layout);
+    layout->addWidget(label);
+    layout->addWidget(_keySeq);
+    setLayout(layout);
 
-  connect(_keySeq, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onSequenceWidgetChanged(QKeySequence)));
+    connect(_keySeq, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onSequenceWidgetChanged(QKeySequence)));
 
-  //Move the popup to the mouse coordinates (ensure it's within the screen)
-  QRect geometry = QApplication::desktop()->availableGeometry(this);
-  geometry.adjust(0, 0, -sizeHint().width(), -sizeHint().height());
-  QPoint pos = QCursor::pos();
-  pos.rx() -= sizeHint().width()/2;
-  pos.ry() -= sizeHint().height()/2;
+    //Move the popup to the mouse coordinates (ensure it's within the screen)
+    QRect geometry = QApplication::desktop()->availableGeometry(this);
+    geometry.adjust(0, 0, -sizeHint().width(), -sizeHint().height());
+    QPoint pos = QCursor::pos();
+    pos.rx() -= sizeHint().width()/2;
+    pos.ry() -= sizeHint().height()/2;
 
-  pos.setX(geometry.right() < pos.x() ? geometry.right() : pos.x());
-  pos.setY(geometry.bottom() < pos.y() ? geometry.bottom() : pos.y());
-  pos.setX(geometry.left() > pos.x() ? geometry.left() : pos.x());
-  pos.setY(geometry.top() > pos.y() ? geometry.top() : pos.y());
+    pos.setX(geometry.right() < pos.x() ? geometry.right() : pos.x());
+    pos.setY(geometry.bottom() < pos.y() ? geometry.bottom() : pos.y());
+    pos.setX(geometry.left() > pos.x() ? geometry.left() : pos.x());
+    pos.setY(geometry.top() > pos.y() ? geometry.top() : pos.y());
 
-  move(pos);
-  show();
+    move(pos);
+    show();
 }
 
 void NetworkModelController::BufferShortcutPopup::onSequenceWidgetChanged(QKeySequence sequence) {
-  BufferSettings(_bufferInfo.bufferId()).setShortcut(sequence);
-  emit keySequenceChanged(_bufferInfo.bufferId());
+    BufferSettings(_bufferInfo.bufferId()).setShortcut(sequence);
+    emit keySequenceChanged(_bufferInfo.bufferId());
 
-  hide();
-  deleteLater();
+    hide();
+    deleteLater();
 }

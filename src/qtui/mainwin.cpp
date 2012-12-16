@@ -184,7 +184,7 @@ void MainWin::init()
         SLOT(messagesInserted(const QModelIndex &, int, int)));
     connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(showChannelList(NetworkId)), SLOT(showChannelList(NetworkId)));
     connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(showIgnoreList(QString)), SLOT(showIgnoreList(QString)));
-  connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(bufferShortcutsChanged(BufferId)), SLOT(updateQuickAccessor(BufferId)));
+    connect(GraphicalUi::contextMenuActionProvider(), SIGNAL(bufferShortcutsChanged(BufferId)), SLOT(updateQuickAccessor(BufferId)));
 
     connect(Client::coreConnection(), SIGNAL(startCoreSetup(QVariantList)), SLOT(showCoreConfigWizard(QVariantList)));
     connect(Client::coreConnection(), SIGNAL(connectionErrorPopup(QString)), SLOT(handleCoreConnectionError(QString)));
@@ -992,52 +992,52 @@ void MainWin::connectedToCore()
     connect(Client::transferManager(), SIGNAL(transferAdded(const ClientTransfer*)), SLOT(showNewTransferDlg(const ClientTransfer*)));
 
     setConnectedState();
-  setupQuickAccessors();
+    setupQuickAccessors();
 }
 
 void MainWin::setupQuickAccessors() {
-  QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
-  QListIterator<BufferId> bufIter(allBufferIds);
+    QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
+    QListIterator<BufferId> bufIter(allBufferIds);
 
-  QHash<QString, ActionCollection*> colls = QtUi::quickAccessorActionCollections();
-  qDeleteAll(colls);
-  colls.clear();
-  //QtUi::quickAccessorActionCollection()->clear();
+    QHash<QString, ActionCollection*> colls = QtUi::quickAccessorActionCollections();
+    qDeleteAll(colls);
+    colls.clear();
+    //QtUi::quickAccessorActionCollection()->clear();
 
 
-  while(bufIter.hasNext()) {
-    updateQuickAccessor(bufIter.next());
-  }
+    while(bufIter.hasNext()) {
+        updateQuickAccessor(bufIter.next());
+    }
 }
 
 void MainWin::updateQuickAccessor(BufferId id) {
-  //ActionCollection *coll = QtUi::quickAccessorActionCollection();
+    //ActionCollection *coll = QtUi::quickAccessorActionCollection();
 
-  BufferInfo info = Client::networkModel()->bufferInfo(id);
-  if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
-      QString networkName = Client::networkModel()->networkName(id);
-      //if(QtUi::quickAccessorActionCollection(networkName)->action(QString("QuickAccessor%1").arg(id.toInt())) == 0)
-      //{
-      //QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
-                                                                                           //QtUi::quickAccessorActionCollection(networkName), parent(), SLOT(onJumpKey())));
-      BufferSettings settings(id);
-      //if(settings.shortcut()) {
-      Action *a = new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()));
-      a->setShortcut(settings.shortcut(), Action::ActiveShortcut);
-      a->setProperty("BufferId", qVariantFromValue(id));
-      QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), a);
-      //}
-      //}
-  }
-//  BufferInfo info = Client::networkModel()->bufferInfo(id);
-//    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
-//      BufferSettings settings(id);
-//      if(settings.shortcut()) {
-//      QString actionText = QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName());
-//        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
-//                      new Action(actionText, coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
-//    }
-//  }
+    BufferInfo info = Client::networkModel()->bufferInfo(id);
+    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+        QString networkName = Client::networkModel()->networkName(id);
+        //if(QtUi::quickAccessorActionCollection(networkName)->action(QString("QuickAccessor%1").arg(id.toInt())) == 0)
+        //{
+        //QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
+        //QtUi::quickAccessorActionCollection(networkName), parent(), SLOT(onJumpKey())));
+        BufferSettings settings(id);
+        //if(settings.shortcut()) {
+        Action *a = new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()));
+        a->setShortcut(settings.shortcut(), Action::ActiveShortcut);
+        a->setProperty("BufferId", qVariantFromValue(id));
+        QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), a);
+        //}
+        //}
+    }
+    //  BufferInfo info = Client::networkModel()->bufferInfo(id);
+    //    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
+    //      BufferSettings settings(id);
+    //      if(settings.shortcut()) {
+    //      QString actionText = QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName());
+    //        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
+    //                      new Action(actionText, coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
+    //    }
+    //  }
 }
 
 
@@ -1367,10 +1367,10 @@ void MainWin::showShortcutsDlg()
     dlg.addCollection(coll, coll->property("Category").toString());
     dlg.exec();
 #else
-  SettingsDlg *dlg = new SettingsDlg();
-  dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
-  dlg->registerSettingsPage(new QuickAccessorsSettingsPage(QtUi::quickAccessorActionCollections(), dlg));
-  dlg->show();
+    SettingsDlg *dlg = new SettingsDlg();
+    dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
+    dlg->registerSettingsPage(new QuickAccessorsSettingsPage(QtUi::quickAccessorActionCollections(), dlg));
+    dlg->show();
 #endif
 }
 

@@ -15,25 +15,25 @@ QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(const QHash<QString, Acti
 }
 
 void QuickAccessorsSettingsPage::load() {
+    delete _shortcutsModel;
 
-  delete _shortcutsModel;
-  QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
-  QHash<QString, ActionCollection *> colls = QtUi::quickAccessorActionCollections();
+    QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
+    QHash<QString, ActionCollection *> colls = QtUi::quickAccessorActionCollections();
 
-  QListIterator<BufferId> bufIter(allBufferIds);
-  BufferId id;
-  BufferInfo info;
+    QListIterator<BufferId> bufIter(allBufferIds);
+    BufferId id;
+    BufferInfo info;
 
-  _shortcutsModel = new QuickAccessorsModel(colls, this);
-  _shortcutsModel->load();
-  _shortcutsFilter->setSourceModel(_shortcutsModel);
-  connect(_shortcutsModel, SIGNAL(hasChanged(bool)), SLOT(setChangedState(bool)));
+    _shortcutsModel = new QuickAccessorsModel(colls, this);
+    _shortcutsModel->load();
+    _shortcutsFilter->setSourceModel(_shortcutsModel);
+    connect(_shortcutsModel, SIGNAL(hasChanged(bool)), SLOT(setChangedState(bool)));
 
-  ui.shortcutsView->expandAll();
+    ui.shortcutsView->expandAll();
 
-  setChangedState(false);
+    setChangedState(false);
 
-  SettingsPage::load();
+    SettingsPage::load();
 }
 
 void QuickAccessorsSettingsPage::save() {

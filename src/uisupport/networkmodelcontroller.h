@@ -55,7 +55,7 @@ public:
         BufferPart = 0x20,
         BufferSwitchTo = 0x30,
         BufferRemove = 0x40,
-    BufferSetShortcut = 0x50,
+        BufferSetShortcut = 0x50,
 
         // Hide actions
         HideMask = 0x0f00,
@@ -154,7 +154,7 @@ protected slots:
 signals:
     void showChannelList(NetworkId);
     void showIgnoreList(QString);
-  void bufferShortcutsChanged(BufferId);
+    void bufferShortcutsChanged(BufferId);
 
 protected:
     virtual void handleNetworkAction(ActionType, QAction *);
@@ -165,7 +165,7 @@ protected:
     virtual void handleExternalAction(ActionType, QAction *);
 
     class JoinDlg;
-  class BufferShortcutPopup;
+    class BufferShortcutPopup;
 
 private:
     NetworkModel *_model;

@@ -114,7 +114,7 @@ private:
     static GraphicalUi *_instance;
     static QWidget *_mainWidget;
     static QHash<QString, ActionCollection *> _actionCollections;
-  static QHash<QString, ActionCollection *> _quickAccessorActionCollections;
+    static QHash<QString, ActionCollection *> _quickAccessorActionCollections;
     static ContextMenuActionProvider *_contextMenuActionProvider;
     static ToolBarActionProvider *_toolBarActionProvider;
     static UiStyle *_uiStyle;
