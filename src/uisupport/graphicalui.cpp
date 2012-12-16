@@ -113,9 +113,9 @@ void GraphicalUi::saveShortcuts()
 {
     ShortcutSettings s;
     s.clear();
-  foreach(ActionCollection *coll, actionCollections()) {
-    coll->writeSettings();
-  }
+    foreach(ActionCollection *coll, actionCollections()) {
+        coll->writeSettings();
+    }
 }
 
 
