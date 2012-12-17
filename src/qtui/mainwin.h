@@ -122,6 +122,7 @@ private slots:
     void showNotificationsDlg();
     void showIgnoreList(QString newRule = QString());
     void showShortcutsDlg();
+    void showQuickAccessorsDlg();
     void toggleFullscreen();
     void updateQuickAccessor(BufferId);
 

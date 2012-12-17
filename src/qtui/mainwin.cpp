@@ -397,6 +397,13 @@ void MainWin::setupActions()
     configureShortcutsAct->setMenuRole(QAction::NoRole);
     coll->addAction("ConfigureShortcuts", configureShortcutsAct);
 
+#ifdef HAVE_KDE
+    QAction *configureQuickAccessorsAct = new Action(SmallIcon("configure-shortcuts"), tr("Configure &Quick Accessors..."), coll,
+        this, SLOT(showQuickAccessorsDlg()));
+    configureQuickAccessorsAct->setMenuRole(QAction::NoRole);
+    coll->addAction("ConfigureQuickAccessors", configureQuickAccessorsAct);
+#endif
+
   #ifdef Q_WS_MAC
     QAction *configureQuasselAct = new Action(SmallIcon("configure"), tr("&Configure Quassel..."), coll,
         this, SLOT(showSettingsDlg()));
@@ -494,6 +501,7 @@ void MainWin::setupMenus()
     _settingsMenu = menuBar()->addMenu(tr("&Settings"));
 #ifdef HAVE_KDE
     _settingsMenu->addAction(KStandardAction::configureNotifications(this, SLOT(showNotificationsDlg()), this));
+    _settingsMenu->addAction(coll->action("ConfigureQuickAccessors"));
     _settingsMenu->addAction(KStandardAction::keyBindings(this, SLOT(showShortcutsDlg()), this));
 #else
     _settingsMenu->addAction(coll->action("ConfigureShortcuts"));
@@ -1349,6 +1357,15 @@ void MainWin::showShortcutsDlg()
     dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::actionCollections(), dlg));
     dlg->registerSettingsPage(new QuickAccessorsSettingsPage(QtUi::quickAccessorActionCollections(), dlg));
     dlg->show();
+#endif
+}
+
+
+void MainWin::showQuickAccessorsDlg()
+{
+#ifdef HAVE_KDE
+    SettingsPageDlg dlg(new QuickAccessorsSettingsPage(QtUi::quickAccessorActionCollections(), this), this);
+    dlg.exec();
 #endif
 }
 
