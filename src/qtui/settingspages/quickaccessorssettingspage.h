@@ -29,9 +29,7 @@ public:
     //~QuickAccessorsSettingsPage();
 
 public slots:
-    void save();
     void load();
-    void defaults();
 
 private:
     //Ui::QuickAccessorsSettingsPage ui;

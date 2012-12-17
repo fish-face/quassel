@@ -36,15 +36,6 @@ void QuickAccessorsSettingsPage::load() {
     SettingsPage::load();
 }
 
-void QuickAccessorsSettingsPage::save() {
-    _shortcutsModel->commit();
-    SettingsPage::save();
-}
-
-void QuickAccessorsSettingsPage::defaults() {
-
-}
-
 
 
 QuickAccessorsModel::QuickAccessorsModel(const QHash<QString, ActionCollection *> &colls, QWidget *parent)
