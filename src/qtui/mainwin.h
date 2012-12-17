@@ -125,6 +125,7 @@ private slots:
     void showShortcutsDlg();
     void showNewTransferDlg(const ClientTransfer *transfer);
     void onFullScreenToggled();
+    void showQuickAccessorsDlg();
     void updateQuickAccessor(BufferId);
 
     void handleCoreConnectionError(const QString &errorMsg);
