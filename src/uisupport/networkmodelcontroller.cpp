@@ -314,7 +314,9 @@ void NetworkModelController::handleBufferAction(ActionType type, QAction *)
     }
 }
 
-void NetworkModelController::handleHideAction(ActionType type, QAction *action) {
+
+void NetworkModelController::handleHideAction(ActionType type, QAction *action)
+{
     Q_UNUSED(action)
 
     int filter = 0;
