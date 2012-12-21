@@ -100,10 +100,12 @@ ShortcutsSettingsPage::ShortcutsSettingsPage(const QHash<QString, ActionCollecti
     QTimer::singleShot(0, ui.searchEdit, SLOT(setFocus()));
 }
 
+
 /*void ShortcutsSettingsPage::initUi()
 {
 
 }*/
+
 
 void ShortcutsSettingsPage::setWidgetStates()
 {
