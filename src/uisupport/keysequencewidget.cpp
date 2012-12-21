@@ -195,7 +195,7 @@ KeySequenceWidget::KeySequenceWidget(QWidget *parent)
 
 void KeySequenceWidget::setModel(ShortcutsModel *model)
 {
-    Q_ASSERT(!_shortcutsModel);
+    //Q_ASSERT(!_shortcutsModel);
     _shortcutsModel = model;
 }
 

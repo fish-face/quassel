@@ -25,7 +25,7 @@ class QuickAccessorsSettingsPage : public ShortcutsSettingsPage
     Q_OBJECT
 
 public:
-    QuickAccessorsSettingsPage(const QHash<QString, ActionCollection*> &colls, QWidget *parent);
+    QuickAccessorsSettingsPage(QWidget *parent = 0);
     //~QuickAccessorsSettingsPage();
 
 public slots:

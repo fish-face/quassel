@@ -28,7 +28,8 @@
 #include "shortcutsmodel.h"
 #include "util.h"
 
-ShortcutsFilter::ShortcutsFilter(QObject *parent) : QSortFilterProxyModel(parent)
+ShortcutsFilter::ShortcutsFilter(QList<QString> include, QObject *parent) : QSortFilterProxyModel(parent),
+  _includeCategories(include)
 {
     setDynamicSortFilter(true);
 }
@@ -43,12 +44,22 @@ void ShortcutsFilter::setFilterString(const QString &filterString)
 
 bool ShortcutsFilter::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-    if (!source_parent.isValid())
-        return true;
+    QModelIndex index;
+    if (!source_parent.isValid()) {
+        index = sourceModel()->index(source_row, 0);
+        Q_ASSERT(index.isValid());
+        if(!_includeCategories.contains(qvariant_cast<QString>(index.data())))
+            return false;
 
-    QModelIndex index = source_parent.model()->index(source_row, 0, source_parent);
+        return true;
+    }
+
+    index = source_parent.model()->index(source_row, 0, source_parent);
     Q_ASSERT(index.isValid());
     if (!qobject_cast<Action *>(index.data(ShortcutsModel::ActionRole).value<QObject *>())->isShortcutConfigurable())
+        return false;
+
+    if (!_includeCategories.contains(qvariant_cast<QString>(source_parent.data())))
         return false;
 
     for (int col = 0; col < source_parent.model()->columnCount(source_parent); col++) {
@@ -58,13 +69,12 @@ bool ShortcutsFilter::filterAcceptsRow(int source_row, const QModelIndex &source
     return false;
 }
 
-
 /****************************************************************************/
 
-ShortcutsSettingsPage::ShortcutsSettingsPage(const QHash<QString, ActionCollection *> &actionCollections, QWidget *parent, const QString &category, const QString &name)
+ShortcutsSettingsPage::ShortcutsSettingsPage(const QHash<QString, ActionCollection *> &actionCollections, QList<QString> includeCategories, QWidget *parent, const QString &category, const QString &name)
     : SettingsPage(category, name, parent),
     _shortcutsModel(new ShortcutsModel(actionCollections, this)),
-    _shortcutsFilter(new ShortcutsFilter(this))
+    _shortcutsFilter(new ShortcutsFilter(includeCategories, this))
 {
     ui.setupUi(this);
 

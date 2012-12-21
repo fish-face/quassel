@@ -51,6 +51,7 @@ public:
     static ActionCollection *quickAccessorActionCollection(const QString&);
     static QHash<QString, ActionCollection *> actionCollections();
     static QHash<QString, ActionCollection *> quickAccessorActionCollections();
+    static QHash<QString, ActionCollection *> allActionCollections();
 
     //! Load custom shortcuts from ShortcutSettings
     /** @note This method assumes that all configurable actions are defined when being called

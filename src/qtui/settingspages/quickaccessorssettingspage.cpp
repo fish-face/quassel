@@ -8,26 +8,21 @@
 #include "buffersettings.h"
 #include "bufferview.h"
 
-QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(const QHash<QString, ActionCollection*> &colls, QWidget *parent)
-    : ShortcutsSettingsPage(colls, parent, tr("Interface"), tr("Quick Accessors"))
+QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(QWidget *parent)
+    : ShortcutsSettingsPage(QtUi::allActionCollections(), QtUi::quickAccessorActionCollections().keys(), parent, tr("Interface"), tr("Quick Accessors"))
 {
 
 }
 
 void QuickAccessorsSettingsPage::load() {
+    //We need to replace _shortcutsModel with our own class which saves things correctly.
     delete _shortcutsModel;
 
-    QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
-    QHash<QString, ActionCollection *> colls = QtUi::quickAccessorActionCollections();
-
-    QListIterator<BufferId> bufIter(allBufferIds);
-    BufferId id;
-    BufferInfo info;
-
-    _shortcutsModel = new QuickAccessorsModel(colls, this);
+    _shortcutsModel = new QuickAccessorsModel(QtUi::allActionCollections(), this);
     _shortcutsModel->load();
     _shortcutsFilter->setSourceModel(_shortcutsModel);
     connect(_shortcutsModel, SIGNAL(hasChanged(bool)), SLOT(setChangedState(bool)));
+    ui.keySequenceWidget->setModel(_shortcutsModel);
 
     ui.shortcutsView->expandAll();
 

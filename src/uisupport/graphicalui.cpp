@@ -103,6 +103,14 @@ QHash<QString, ActionCollection *> GraphicalUi::actionCollections() {
     return _actionCollections;
 }
 
+
+QHash<QString, ActionCollection *> GraphicalUi::allActionCollections()
+{
+    QHash<QString, ActionCollection *> all = _actionCollections;
+    all.unite(_quickAccessorActionCollections);
+    return all;
+}
+
 void GraphicalUi::loadShortcuts() {
     foreach(ActionCollection *coll, actionCollections())
     coll->readSettings();
