@@ -81,6 +81,7 @@ ActionCollection *GraphicalUi::actionCollection(const QString &category, const Q
     return coll;
 }
 
+
 ActionCollection *GraphicalUi::quickAccessorActionCollection(const QString &networkName)
 {
     if (_quickAccessorActionCollections.contains(networkName))
@@ -95,9 +96,11 @@ ActionCollection *GraphicalUi::quickAccessorActionCollection(const QString &netw
     return coll;
 }
 
+
 QHash<QString, ActionCollection *> GraphicalUi::quickAccessorActionCollections() {
     return _quickAccessorActionCollections;
 }
+
 
 QHash<QString, ActionCollection *> GraphicalUi::actionCollections() {
     return _actionCollections;
@@ -110,6 +113,7 @@ QHash<QString, ActionCollection *> GraphicalUi::allActionCollections()
     all.unite(_quickAccessorActionCollections);
     return all;
 }
+
 
 void GraphicalUi::loadShortcuts() {
     foreach(ActionCollection *coll, actionCollections())

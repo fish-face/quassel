@@ -641,6 +641,7 @@ NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo buff
     show();
 }
 
+
 void NetworkModelController::BufferShortcutPopup::onSequenceWidgetChanged(QKeySequence sequence) {
     BufferSettings(_bufferInfo.bufferId()).setShortcut(sequence);
     emit keySequenceChanged(_bufferInfo.bufferId());

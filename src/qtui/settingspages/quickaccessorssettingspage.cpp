@@ -14,6 +14,7 @@ QuickAccessorsSettingsPage::QuickAccessorsSettingsPage(QWidget *parent)
 
 }
 
+
 void QuickAccessorsSettingsPage::load() {
     //We need to replace _shortcutsModel with our own class which saves things correctly.
     delete _shortcutsModel;
@@ -38,6 +39,7 @@ QuickAccessorsModel::QuickAccessorsModel(const QHash<QString, ActionCollection *
 {
 
 }
+
 
 void QuickAccessorsModel::commit() {
     BufferId id;

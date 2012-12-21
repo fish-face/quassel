@@ -1003,6 +1003,7 @@ void MainWin::connectedToCore()
     setupQuickAccessors();
 }
 
+
 void MainWin::setupQuickAccessors() {
     QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
     QListIterator<BufferId> bufIter(allBufferIds);
@@ -1017,6 +1018,7 @@ void MainWin::setupQuickAccessors() {
         updateQuickAccessor(bufIter.next());
     }
 }
+
 
 void MainWin::updateQuickAccessor(BufferId id) {
     //ActionCollection *coll = QtUi::quickAccessorActionCollection();
