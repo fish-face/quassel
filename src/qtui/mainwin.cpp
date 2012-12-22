@@ -986,11 +986,9 @@ void MainWin::setupQuickAccessors() {
     QList<BufferId> allBufferIds = Client::networkModel()->allBufferIds();
     QListIterator<BufferId> bufIter(allBufferIds);
 
-    QHash<QString, ActionCollection*> colls = QtUi::quickAccessorActionCollections();
-    qDeleteAll(colls);
-    colls.clear();
-    //QtUi::quickAccessorActionCollection()->clear();
-
+    foreach(ActionCollection *coll, QtUi::quickAccessorActionCollections()) {
+        coll->clear();
+    }
 
     while(bufIter.hasNext()) {
         updateQuickAccessor(bufIter.next());
@@ -999,33 +997,16 @@ void MainWin::setupQuickAccessors() {
 
 
 void MainWin::updateQuickAccessor(BufferId id) {
-    //ActionCollection *coll = QtUi::quickAccessorActionCollection();
-
     BufferInfo info = Client::networkModel()->bufferInfo(id);
     if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
         QString networkName = Client::networkModel()->networkName(id);
-        //if(QtUi::quickAccessorActionCollection(networkName)->action(QString("QuickAccessor%1").arg(id.toInt())) == 0)
-        //{
-        //QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), new Action(info.bufferName(),
-        //QtUi::quickAccessorActionCollection(networkName), parent(), SLOT(onJumpKey())));
+
         BufferSettings settings(id);
-        //if(settings.shortcut()) {
         Action *a = new Action(info.bufferName(), QtUi::quickAccessorActionCollection(networkName), this, SLOT(onJumpKey()));
         a->setShortcut(settings.shortcut(), Action::ActiveShortcut);
         a->setProperty("BufferId", qVariantFromValue(id));
         QtUi::quickAccessorActionCollection(networkName)->addAction(QString("QuickAccessor%1").arg(id.toInt()), a);
-        //}
-        //}
     }
-    //  BufferInfo info = Client::networkModel()->bufferInfo(id);
-    //    if(info.type() & (BufferInfo::ChannelBuffer | BufferInfo::QueryBuffer)) {
-    //      BufferSettings settings(id);
-    //      if(settings.shortcut()) {
-    //      QString actionText = QString("%1/%2").arg(Client::networkModel()->networkName(id)).arg(info.bufferName());
-    //        coll->addAction(QString("QuickAccessor%1").arg(id.toInt()),
-    //                      new Action(actionText, coll, this, SLOT(onJumpKey()), settings.shortcut()))->setProperty("BufferId", qVariantFromValue(id));
-    //    }
-    //  }
 }
 
 
