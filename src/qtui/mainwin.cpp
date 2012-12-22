@@ -1359,6 +1359,7 @@ void MainWin::showShortcutsDlg()
     dlg.exec();
 #else
     SettingsDlg *dlg = new SettingsDlg();
+    setupQuickAccessors();
     dlg->registerSettingsPage(new ShortcutsSettingsPage(QtUi::allActionCollections(), QtUi::actionCollections().keys(), dlg));
     dlg->registerSettingsPage(new QuickAccessorsSettingsPage(dlg));
     dlg->show();
@@ -1376,6 +1377,7 @@ void MainWin::showNewTransferDlg(const ClientTransfer *transfer)
 void MainWin::showQuickAccessorsDlg()
 {
 #ifdef HAVE_KDE
+    setupQuickAccessors();
     SettingsPageDlg dlg(new QuickAccessorsSettingsPage(this), this);
     dlg.exec();
 #endif
