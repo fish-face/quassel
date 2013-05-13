@@ -306,7 +306,7 @@ void ContextMenuActionProvider::addBufferItemActions(QMenu *menu, const QModelIn
         addAction(HideBufferTemporarily, menu, isCustomBufferView);
         addAction(HideBufferPermanently, menu, isCustomBufferView);
         addAction(BufferRemove, menu, index, InactiveState);
-        addAction(BufferSetShortcut, menu, index, ActiveState);
+        addAction(BufferSetShortcut, menu, index);
         break;
 
     case BufferInfo::QueryBuffer:
@@ -321,7 +321,7 @@ void ContextMenuActionProvider::addBufferItemActions(QMenu *menu, const QModelIn
         addAction(HideBufferTemporarily, menu, isCustomBufferView);
         addAction(HideBufferPermanently, menu, isCustomBufferView);
         addAction(BufferRemove, menu, index);
-        addAction(BufferSetShortcut, menu, index, ActiveState);
+        addAction(BufferSetShortcut, menu, index);
         break;
     }
 
