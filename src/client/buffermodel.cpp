@@ -23,6 +23,8 @@
 #include <QAbstractItemView>
 
 #include "client.h"
+#include "clientbufferviewconfig.h"
+#include "clientbufferviewmanager.h"
 #include "networkmodel.h"
 #include "quassel.h"
 
@@ -97,6 +99,19 @@ void BufferModel::setCurrentIndex(const QModelIndex &newCurrent)
 void BufferModel::switchToBuffer(const BufferId &bufferId)
 {
     QModelIndex source_index = Client::networkModel()->bufferIndex(bufferId);
+
+    //Unhide switched buffer if hidden
+    ClientBufferViewManager *manager = Client::bufferViewManager();
+    if(manager) {
+        foreach(ClientBufferViewConfig *config, manager->clientBufferViewConfigs()) {
+            //We only unhide if temporarily hidden.
+            if(config->temporarilyRemovedBuffers().contains(bufferId)) {
+                config->addBuffer(bufferId, config->bufferList().length());
+            }
+        }
+    }
+
+    //Now make the switch. Doing it after unhiding ensures the buffer is selected.
     setCurrentIndex(mapFromSource(source_index));
 }
 
