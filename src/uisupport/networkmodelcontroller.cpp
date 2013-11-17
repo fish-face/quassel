@@ -613,17 +613,17 @@ NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo buff
     QHash<QString, ActionCollection *> actionCollections;
     actionCollections.unite(GraphicalUi::quickAccessorActionCollections());
     actionCollections.unite(GraphicalUi::actionCollections());
-    ShortcutsModel *shortcutsModel = new ShortcutsModel(actionCollections);
+    _shortcutsModel = new ShortcutsModel(actionCollections);
 
     _keySeq = new KeySequenceWidget(this);
-    _keySeq->setModel(shortcutsModel);
+    _keySeq->setModel(_shortcutsModel);
     _keySeq->setKeySequence(BufferSettings(bufferInfo.bufferId()).shortcut());
 
     layout->addWidget(label);
     layout->addWidget(_keySeq);
     setLayout(layout);
 
-    connect(_keySeq, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(onSequenceWidgetChanged(QKeySequence)));
+    connect(_keySeq, SIGNAL(keySequenceChanged(QKeySequence, QModelIndex)), this, SLOT(onSequenceWidgetChanged(QKeySequence, QModelIndex)));
 
     //Move the popup to the mouse coordinates (ensure it's within the screen)
     QRect geometry = QApplication::desktop()->availableGeometry(this);
@@ -642,7 +642,21 @@ NetworkModelController::BufferShortcutPopup::BufferShortcutPopup(BufferInfo buff
 }
 
 
-void NetworkModelController::BufferShortcutPopup::onSequenceWidgetChanged(QKeySequence sequence) {
+void NetworkModelController::BufferShortcutPopup::onSequenceWidgetChanged(QKeySequence sequence, QModelIndex conflicting) {
+    if (conflicting.isValid()) {
+        //Clear the conflict
+        _shortcutsModel->setData(conflicting, QKeySequence(), ShortcutsModel::ActiveShortcutRole);
+        _shortcutsModel->commit();
+
+        //We must also clear the shortcut property in BufferSettings
+        QObject *actObj = qvariant_cast<QObject *>(_shortcutsModel->data(conflicting, ShortcutsModel::ActionRole));
+        Action *action = qobject_cast<Action *>(actObj);
+        BufferId id = qvariant_cast<BufferId>(action->property("BufferId"));
+        BufferSettings s(id);
+        qDebug() << s.shortcut().toString();
+        s.setShortcut(QKeySequence());
+    }
+
     BufferSettings(_bufferInfo.bufferId()).setShortcut(sequence);
     emit keySequenceChanged(_bufferInfo.bufferId());
 

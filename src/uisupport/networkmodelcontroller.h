@@ -210,7 +210,7 @@ public:
     BufferShortcutPopup(BufferInfo, QWidget *parent = 0);
 
 private slots:
-    void onSequenceWidgetChanged(QKeySequence);
+    void onSequenceWidgetChanged(QKeySequence, QModelIndex conflicting);
 
 signals:
     void keySequenceChanged(BufferId);
@@ -219,6 +219,7 @@ private:
     KeySequenceWidget *_keySeq;
     BufferInfo _bufferInfo;
     NetworkModelController *_controller;
+    ShortcutsModel *_shortcutsModel;
 };
 
 
