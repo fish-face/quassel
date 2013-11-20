@@ -330,6 +330,10 @@ bool BufferViewFilter::filterAcceptBuffer(const QModelIndex &source_bufferIndex)
     Q_ASSERT(bufferId.isValid());
 
     int activityLevel = sourceModel()->data(source_bufferIndex, NetworkModel::BufferActivityRole).toInt();
+    QModelIndex currentIndex = Client::bufferModel()->standardSelectionModel()->currentIndex();
+    bool selected = (bufferId == currentIndex.data(NetworkModel::BufferIdRole).value<BufferId>());
+    if (bufferId.toInt() == 6)
+        qDebug() << "now " << bufferId << " is " << selected;
 
     if (!config()->bufferList().contains(bufferId) && !_editMode) {
         // add the buffer if...
@@ -340,6 +344,9 @@ bool BufferViewFilter::filterAcceptBuffer(const QModelIndex &source_bufferIndex)
             addBuffer(bufferId);
         }
         // note: adding the buffer to the valid list does not temper with the following filters ("show only channels" and stuff)
+        if (selected && (config()->removedBuffers().contains(bufferId) ||
+                         config()->temporarilyRemovedBuffers().contains(bufferId)))
+            return true;
         return false;
     }
 
@@ -358,8 +365,7 @@ bool BufferViewFilter::filterAcceptBuffer(const QModelIndex &source_bufferIndex)
     }
 
     // the following dynamic filters may not trigger if the buffer is currently selected.
-    QModelIndex currentIndex = Client::bufferModel()->standardSelectionModel()->currentIndex();
-    if (bufferId == Client::bufferModel()->data(currentIndex, NetworkModel::BufferIdRole).value<BufferId>())
+    if (selected)
         return true;
 
     if (config()->hideInactiveBuffers() && !sourceModel()->data(source_bufferIndex, NetworkModel::ItemActiveRole).toBool() && activityLevel <= BufferInfo::OtherActivity)

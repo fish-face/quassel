@@ -33,10 +33,8 @@ BufferModel::BufferModel(NetworkModel *parent)
     _selectionModelSynchronizer(this)
 {
     setSourceModel(parent);
-    if (Quassel::isOptionSet("debugbufferswitches")) {
-        connect(_selectionModelSynchronizer.selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(debug_currentChanged(const QModelIndex &, const QModelIndex &)));
-    }
+    connect(_selectionModelSynchronizer.selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+        this, SLOT(currentChanged(const QModelIndex &, const QModelIndex &)));
     connect(Client::instance(), SIGNAL(networkCreated(NetworkId)), this, SLOT(newNetwork(NetworkId)));
     connect(this, SIGNAL(rowsInserted(const QModelIndex &, int, int)), this, SLOT(newBuffers(const QModelIndex &, int, int)));
 }
@@ -151,10 +149,19 @@ void BufferModel::switchToOrJoinBuffer(NetworkId networkId, const QString &name,
 }
 
 
-void BufferModel::debug_currentChanged(QModelIndex current, QModelIndex previous)
+void BufferModel::currentChanged(QModelIndex current, QModelIndex previous)
 {
-    Q_UNUSED(previous);
-    qDebug() << "Switched current Buffer: " << current << current.data().toString() << "Buffer:" << current.data(NetworkModel::BufferIdRole).value<BufferId>();
+    if (current.isValid())
+        emit dataChanged(current, current);
+    if (previous.isValid())
+        emit dataChanged(previous, previous);
+
+    if (Quassel::isOptionSet("debugbufferswitches")) {
+        qDebug() << "Switched current Buffer: "
+                 << current << current.data().toString()
+                 << "Buffer:"
+                 << current.data(NetworkModel::BufferIdRole).value<BufferId>();
+    }
 }
 
 
