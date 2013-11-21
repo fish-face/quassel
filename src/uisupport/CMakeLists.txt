@@ -38,6 +38,9 @@ set(SOURCES
     toolbaractionprovider.cpp
     uisettings.cpp
     uistyle.cpp
+    keysequencewidget.cpp
+    shortcutsmodel.cpp
+    buffershortcutpopup.cpp
    )
 
 set(MOC_HDRS
@@ -68,6 +71,9 @@ set(MOC_HDRS
     tabcompleter.h
     toolbaractionprovider.h
     uistyle.h
+    keysequencewidget.h
+    shortcutsmodel.h
+    buffershortcutpopup.h
    )
 
 set(HEADERS
