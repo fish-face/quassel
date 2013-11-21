@@ -64,7 +64,7 @@ public slots:
     void switchToBufferAfterCreation(NetworkId network, const QString &name);
 
 private slots:
-    void debug_currentChanged(QModelIndex current, QModelIndex previous);
+    void currentChanged(QModelIndex current, QModelIndex previous);
     void newNetwork(NetworkId id);
     void networkConnectionChanged(Network::ConnectionState state);
     void newBuffers(const QModelIndex &parent, int start, int end);
