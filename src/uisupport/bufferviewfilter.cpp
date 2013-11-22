@@ -332,8 +332,6 @@ bool BufferViewFilter::filterAcceptBuffer(const QModelIndex &source_bufferIndex)
     int activityLevel = sourceModel()->data(source_bufferIndex, NetworkModel::BufferActivityRole).toInt();
     QModelIndex currentIndex = Client::bufferModel()->standardSelectionModel()->currentIndex();
     bool selected = (bufferId == currentIndex.data(NetworkModel::BufferIdRole).value<BufferId>());
-    if (bufferId.toInt() == 6)
-        qDebug() << "now " << bufferId << " is " << selected;
 
     if (!config()->bufferList().contains(bufferId) && !_editMode) {
         // add the buffer if...
