@@ -557,7 +557,7 @@ void CoreSessionEventProcessor::processIrcEvent301(IrcEvent *e)
     IrcUser *ircuser = e->network()->ircUser(e->params().at(0));
     if (ircuser) {
         ircuser->setAway(true);
-        ircuser->setAwayMessage(e->params().at(1));
+        //ircuser->setAwayMessage(e->params().at(1));
         //ircuser->setLastAwayMessage(now);
     }
 }

@@ -375,8 +375,11 @@ void EventStringifier::processIrcEvent301(IrcEvent *e)
         if (ircuser) {
             int now = QDateTime::currentDateTime().toTime_t();
             const int silenceTime = 60;
-            if (ircuser->lastAwayMessage() + silenceTime >= now)
+
+            if (ircuser->awayMessage() == awayMsg && ircuser->lastAwayMessage() + silenceTime >= now)
                 send = false;
+
+            ircuser->setAwayMessage(awayMsg);
             ircuser->setLastAwayMessage(now);
         }
     }
