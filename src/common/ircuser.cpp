@@ -299,8 +299,8 @@ void IrcUser::partChannel(IrcChannel *channel)
         channel->part(this);
         QString channelName = channel->name();
         SYNC_OTHER(partChannel, ARG(channelName))
-        if (_channels.isEmpty() && !network()->isMe(this))
-            quit();
+        //if (_channels.isEmpty() && !network()->isMe(this))
+        //    quit();
     }
 }
 
