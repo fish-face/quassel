@@ -551,6 +551,7 @@ void CoreUserInputHandler::handleQuery(const BufferInfo &bufferInfo, const QStri
     Q_UNUSED(bufferInfo)
     QString target = msg.section(' ', 0, 0);
     QString message = msg.section(' ', 1);
+    network()->newIrcUser(target);
     if (message.isEmpty())
         emit displayMsg(Message::Server, BufferInfo::QueryBuffer, target, tr("Starting query with %1").arg(target), network()->myNick(), Message::Self);
     else

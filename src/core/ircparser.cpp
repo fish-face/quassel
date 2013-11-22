@@ -185,7 +185,13 @@ void IrcParser::processNetworkIncoming(NetworkDataEvent *e)
             QStringList targets = net->serverDecode(params.at(0)).split(',', QString::SkipEmptyParts);
             QStringList::const_iterator targetIter;
             for (targetIter = targets.constBegin(); targetIter != targets.constEnd(); ++targetIter) {
-                QString target = net->isChannelName(*targetIter) ? *targetIter : senderNick;
+                QString target;
+                if (net->isChannelName(*targetIter)) {
+                    target = *targetIter;
+                } else {
+                    target = senderNick;
+                    net->newIrcUser(prefix);
+                }
 
                 msg = decrypt(net, target, msg);
 
