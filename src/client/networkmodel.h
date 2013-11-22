@@ -164,7 +164,7 @@ public:
     virtual QVariant data(int column, int role) const;
     virtual bool setData(int column, const QVariant &value, int role);
 
-    virtual inline bool isActive() const { return (bool)_ircUser; }
+    virtual inline bool isActive() const { return _ircUser ? _ircUser->isAway() : false; }
     virtual QString toolTip(int column) const;
 
     virtual void setBufferName(const QString &name);
